@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pergunta da Sorte</title>
+
+    <style>
+        /* ── Variáveis ── */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Georgia, serif;
+            background: #07050f;
+            color: #f0e6c8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 48px 16px 80px;
+        }
+
+        /* ── Header ── */
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            color: #e8c76a;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #7d6e55;
+            font-style: italic;
+            font-size: 1rem;
+        }
+
+        /* ── Main ── */
+        main {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* ── Seções ── */
+        section {
+            background: rgba(20, 13, 40, 0.85);
+            border: 1px solid rgba(168, 132, 58, 0.25);
+            border-radius: 16px;
+            padding: 36px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── Label ── */
+        label {
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #a8843a;
+        }
+
+        /* ── Textarea ── */
+        textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(168,132,58,0.3);
+            border-radius: 10px;
+            color: #f0e6c8;
+            font-family: Georgia, serif;
+            font-size: 1.05rem;
+            padding: 14px 16px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #a8843a;
+            box-shadow: 0 0 0 3px rgba(232,199,106,0.12);
+        }
+
+        textarea::placeholder { color: #5a4f3a; }
+
+        /* ── Botões ── */
+        button {
+            cursor: pointer;
+            font-family: Georgia, serif;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 32px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            align-self: center;
+        }
+
+        #btnEnviar {
+            background: linear-gradient(135deg, #e8c76a, #a8843a);
+            color: #07050f;
+            font-weight: bold;
+            letter-spacing: 0.06em;
+            box-shadow: 0 4px 20px rgba(232,199,106,0.25);
+        }
+
+        #btnEnviar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(232,199,106,0.4);
+        }
+
+        #btnNovamente {
+            background: transparent;
+            border: 1px solid rgba(168,132,58,0.4);
+            color: #a8843a;
+        }
+
+        #btnNovamente:hover {
+            background: rgba(168,132,58,0.08);
+            color: #e8c76a;
+        }
+
+        /* ── Seção resposta ── */
+        #secResposta {
+            text-align: center;
+            gap: 20px;
+        }
+
+        #secResposta > p:first-child {
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #7d6e55;
+        }
+
+        #textoResposta {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #f0e6c8;
+            line-height: 1.55;
+            padding: 8px 0;
+            border-top: 1px solid rgba(168,132,58,0.15);
+            border-bottom: 1px solid rgba(168,132,58,0.15);
+        }
+
+        /* ── Histórico ── */
+        #secHistorico h2 {
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #a8843a;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        #listaHistorico {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #listaHistorico li {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(168,132,58,0.1);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            color: #7d6e55;
+            font-style: italic;
+        }
+
+        #listaHistorico:empty::after {
+            content: 'Nenhuma consulta ainda...';
+            display: block;
+            text-align: center;
+            color: #5a4f3a;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* ── Footer ── */
+        footer {
+            margin-top: 48px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #5a4f3a;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Responsivo ── */
+        @media (max-width: 480px) {
+            section { padding: 24px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Número surpresa</h1>
+        <p>Você é capaz de acertar o número da sorte?</p>
+    </header>
+
+    <main>
+
+        <section id="secPergunta">
+            <label for="pergunta">Qual é o seu chute?</label>
+            <textarea id="pergunta" rows="3" placeholder="Ex: 12"></textarea>
+            <button type="button" id="btnEnviar">Revelar</button>
+        </section>
+
+        <section id="secResposta" style="display:none">
+            <p>Seu chute:</p>
+            <p id="textoResposta"></p>
+            <button type="button" id="btnNovamente">Tente novamente</button>
+        </section>
+
+        <section id="secHistorico">
+            <h2>Histórico de tentativas</h2>
+            <ul id="listaHistorico"></ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>As respostas são geradas pelo acaso — decida com sabedoria.</p>
+    </footer>
+
+    <script>
+        document.getElementById('btnEnviar').addEventListener('click', function() {
+
+            const pergunta = document.getElementById('pergunta').value.trim()
+
+            if (pergunta === '') {
+                alert('Digite uma pergunta antes de revelar o destino.')
+                return
+            }
+
+            document.getElementById('secPergunta').style.display = 'none'
+            document.getElementById('secResposta').style.display = 'block'
+
+            fetch('api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'pergunta=' + encodeURIComponent(pergunta)
+            })
+            .then(function(resposta) {
+                return resposta.json()
+            })
+            .then(function(dados) {
+                document.getElementById('textoResposta').textContent = dados.resposta
+
+                const item = document.createElement('li')
+                item.textContent = '"' + pergunta + '" → ' + dados.resposta
+                document.getElementById('listaHistorico').appendChild(item)
+            })
+
+        })
+
+        document.getElementById('btnNovamente').addEventListener('click', function() {
+            document.getElementById('pergunta').value = ''
+            document.getElementById('secResposta').style.display = 'none'
+            document.getElementById('secPergunta').style.display = 'block'
+        })
+    </script>
+
+</body>
+</html>
